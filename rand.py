@@ -3,6 +3,30 @@ import random
 
 random.seed(0xDEADBEEF)
     
+def generator(distr_map):
+    """ Returns a function that can be called to return a random value
+        from the given distribution. 
+        
+        The map must have the form:
+            { value: probability of being selected,
+              next_value: probability of being selected,
+              ... }
+    """
+    def generate():
+        rand = random.random()
+        lower_bound = 0
+        cur_key = 0
+        for key, val in distr_map.iteritems():
+            cur_key += 1
+            if lower_bound == 0:
+                if rand <= val:
+                    return key
+            else:
+                if lower_bound < rand <= (lower_bound + val):
+                    return key
+            lower_bound += val
+    return generate
+    
 def uniform(a, b):
     """ Returns a random number from the uniform distribution [a, b]
     """
