@@ -54,7 +54,7 @@ def poisson(t, lambda_):
     time = 0
     num_events = 0
     while time < t:
-        time += rand_exponential(lambda_)
+        time += exponential(lambda_)
         if time < t:        
             num_events += 1
     return num_events
@@ -66,7 +66,7 @@ def erlang(k, lambda_):
     time = 0
     num_events = 0
     while num_events < k:
-        time += rand_exponential(lambda_)
+        time += exponential(lambda_)
         num_events += 1
     return time
     
