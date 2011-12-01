@@ -77,7 +77,7 @@ def erlang(k, lambda_):
         num_events += 1
     return time
     
-def is_heads():
+def coin_toss():
     """ Returns True or False with a 50/50 chance of either occurring """
     if bernoulli(0.5):
         return True
