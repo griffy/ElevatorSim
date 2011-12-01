@@ -11,6 +11,13 @@ def generator(distr_map):
             { value: probability of being selected,
               next_value: probability of being selected,
               ... }
+
+        Usage example:
+            f = generator({3: 0.40,
+                           4: 0.20,
+                           5: 0.40})
+            rand_val = f()
+            next_rand_val = f()
     """
     def generate():
         rand = random.random()
