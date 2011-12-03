@@ -13,7 +13,6 @@ class Stats(object):
         return len(self._stats[stat])
         
     def add(self, stat, sample_point):
-        print stat, sample_point
         if stat not in self._stats:
             # the statistic does not exist yet, so we initialize it
             self._init_stat(stat)
