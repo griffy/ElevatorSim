@@ -16,7 +16,7 @@ class System(object):
         self.reset()
         event = self.generate_initial_event()
         self.feq.schedule_event(event)
-        while feq.has_events():
+        while self.feq.has_events():
             event = self.feq.next_event()
             self.clock.update(event.time)
             self.simulate(event)
