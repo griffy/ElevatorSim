@@ -13,6 +13,7 @@ class Stats(object):
         return len(self._stats[stat])
         
     def add(self, stat, sample_point):
+        print stat, sample_point
         if stat not in self._stats:
             # the statistic does not exist yet, so we initialize it
             self._init_stat(stat)
@@ -88,5 +89,10 @@ class Stats(object):
                 
                 stats.num_passengers = 1
         """
-        self.add(name, val)
+        if name.startswith('_'):
+            # if the name begins with _, it's been defined inside this class
+            # and so should follow the standard rules
+            object.__setattr__(self, name, val)
+        else:
+            self.add(name, val)
         
