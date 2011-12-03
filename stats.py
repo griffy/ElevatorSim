@@ -59,6 +59,11 @@ class Stats(object):
                 
                 total = stats.total_num_passengers
         """
+        if name.startswith('_'):
+            # if the name begins with _, it's been defined inside this class
+            # and so should follow the standard rules
+            return object.__getattr__(self, name)
+
         if name.startswith('total_'):
             stat = name.replace('total_', '', 1)
             return self.total(stat)
