@@ -27,6 +27,7 @@ class System(object):
         pass
         
     def generate_initial_event(self):
+        """ Returns the initial event in the simulation """
         pass
         
     def simulate(self, event):
