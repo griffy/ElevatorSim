@@ -1,19 +1,20 @@
+import random
+
 from future_events_queue import FutureEventsQueue
 from clock import Clock
 from stats import Stats
 
 class System(object):
-    def __init__(self):
-        self.reset()
-        
-    def reset(self):
+    def reset(self, seed=None):
         self.feq = FutureEventsQueue()
         self.clock = Clock()
         self.stats = Stats()
+        if seed is not None:
+            random.seed(seed)
         self.initialize()
         
-    def run(self):
-        self.reset()
+    def run(self, seed=None):
+        self.reset(seed)
         event = self.generate_initial_event()
         self.feq.schedule_event(event)
         while self.feq.has_events():
