@@ -13,13 +13,15 @@ class System(object):
             random.seed(seed)
         self.initialize()
         
-    def run(self, seed=None):
+    def run(self, duration, seed=None):
         self.reset(seed)
         event = self.generate_initial_event()
         self.feq.schedule_event(event)
         while self.feq.has_events():
             event = self.feq.next_event()
             self.clock.update(event.time)
+            if self.clock.has_run(duration):
+                break
             self.simulate(event)
         return self.stats
         
