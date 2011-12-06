@@ -93,7 +93,6 @@ print "mode of num_passengers list:", stats.mode_num_passengers
 print "mean of num_passengers list:", stats.mean_num_passengers
 print "standard deviation of num_passengers list:", stats.stdev_num_passengers
 
-# if we run it again, the results should be different from the first
 stats = system.run(seed=0xDEADBEEF)
 
 print "num_passengers list:", stats.num_passengers
