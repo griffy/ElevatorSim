@@ -1,7 +1,5 @@
 import math
 import random
-
-random.seed(0xDEADBEEF)
     
 def generator(distr_map):
     """ Returns a function that can be called to return a random value
