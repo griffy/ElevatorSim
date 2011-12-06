@@ -2,6 +2,8 @@ from system import System
 from event import Event
 import rand
 
+ONE_DAY = 60 * 24 # in minutes
+
 class PassengerArriveEvent(Event): pass
 class PassengerDepartEvent(Event): pass
 
@@ -19,10 +21,6 @@ class ElevatorSystem(System):
         return PassengerArriveEvent(time)
         
     def simulate(self, event):
-        # if we're past a day, end the sim by not creating anymore events
-        if self.clock.time() > 60 * 24:
-            return
-            
         if isinstance(event, PassengerArriveEvent):
             self.stats.num_passengers = rand.poisson(5, 1)
             self.feq.schedule_event(PassengerDepartEvent(event.time+1))
@@ -33,7 +31,7 @@ class ElevatorSystem(System):
 #              different each time we run the program, and two calls to run
 #              definitely won't be the same.
 system = ElevatorSystem()
-stats = system.run()
+stats = system.run(ONE_DAY)
 
 print "num_passengers list:", stats.num_passengers
 print "total num_passengers:", stats.total_num_passengers
@@ -43,7 +41,7 @@ print "mean of num_passengers list:", stats.mean_num_passengers
 print "standard deviation of num_passengers list:", stats.stdev_num_passengers
 
 # if we run it again, the results should be different
-stats = system.run()
+stats = system.run(ONE_DAY)
 
 print "num_passengers list:", stats.num_passengers
 print "total num_passengers:", stats.total_num_passengers
@@ -56,7 +54,7 @@ print "standard deviation of num_passengers list:", stats.stdev_num_passengers
 #              and any subsequent calls to run will be predictable (they 
 #              will be the same each time we run the program), but the #              individual results of each run() still won't be the same.
 system = ElevatorSystem()
-stats = system.run(seed=0xDEADBEEF)
+stats = system.run(ONE_DAY, seed=0xDEADBEEF)
 
 print "num_passengers list:", stats.num_passengers
 print "total num_passengers:", stats.total_num_passengers
@@ -66,7 +64,7 @@ print "mean of num_passengers list:", stats.mean_num_passengers
 print "standard deviation of num_passengers list:", stats.stdev_num_passengers
 
 # if we run it again, the results should be different from the first
-stats = system.run()
+stats = system.run(ONE_DAY)
 
 print "num_passengers list:", stats.num_passengers
 print "total num_passengers:", stats.total_num_passengers
@@ -84,7 +82,7 @@ print "standard deviation of num_passengers list:", stats.stdev_num_passengers
 #              I believe this is what we could use for Correlated Sampling
 #              as was discussed in class.
 system = ElevatorSystem()
-stats = system.run(seed=0xDEADBEEF)
+stats = system.run(ONE_DAY, seed=0xDEADBEEF)
 
 print "num_passengers list:", stats.num_passengers
 print "total num_passengers:", stats.total_num_passengers
@@ -93,7 +91,7 @@ print "mode of num_passengers list:", stats.mode_num_passengers
 print "mean of num_passengers list:", stats.mean_num_passengers
 print "standard deviation of num_passengers list:", stats.stdev_num_passengers
 
-stats = system.run(seed=0xDEADBEEF)
+stats = system.run(ONE_DAY, seed=0xDEADBEEF)
 
 print "num_passengers list:", stats.num_passengers
 print "total num_passengers:", stats.total_num_passengers
