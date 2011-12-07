@@ -16,21 +16,20 @@ class ElevatorSystem(System):
         # print is only here to show that initialize is called each
         # time we call .run() below
         print self.elevators
-        
-    def generate_initial_event(self):
+        # schedule first event
         time = 5 # in minutes
-        return PassengerArriveEvent(time)
+        self.schedule_event(PassengerArriveEvent(time)) 
         
     def update(self):
-        # might want to check if people have left a queue here
+        # might want to check if passengers have left a queue here
         pass
         
     def handle(self, event):
         if isinstance(event, PassengerArriveEvent):
             self.stats.num_passengers = rand.poisson(5, 1)
-            self.feq.schedule_event(PassengerDepartEvent(event.time+1))
+            self.schedule_event(PassengerDepartEvent(event.time+1))
         elif isinstance(event, PassengerDepartEvent):
-            self.feq.schedule_event(PassengerArriveEvent(event.time+5))
+            self.schedule_event(PassengerArriveEvent(event.time+5))
         
 # Use Case #1: If we call run without a seed parameter, each call will be
 #              different each time we run the program, and two calls to run
