@@ -4,6 +4,7 @@ import rand
 
 ONE_DAY = 60 * 24 # in minutes
 
+# this event would have a Passenger entity passed to it upon creation
 class PassengerArriveEvent(Event): pass
 class PassengerDepartEvent(Event): pass
 
@@ -20,7 +21,11 @@ class ElevatorSystem(System):
         time = 5 # in minutes
         return PassengerArriveEvent(time)
         
-    def simulate(self, event):
+    def update(self):
+        # might want to check if people have left a queue here
+        pass
+        
+    def handle(self, event):
         if isinstance(event, PassengerArriveEvent):
             self.stats.num_passengers = rand.poisson(5, 1)
             self.feq.schedule_event(PassengerDepartEvent(event.time+1))
@@ -52,7 +57,8 @@ print "standard deviation of num_passengers list:", stats.stdev_num_passengers
 
 # Use Case #2: If we call run with a seed parameter (just once), this call 
 #              and any subsequent calls to run will be predictable (they 
-#              will be the same each time we run the program), but the #              individual results of each run() still won't be the same.
+#              will be the same each time we run the program), but the
+#              individual results of each run() still won't be the same.
 system = ElevatorSystem()
 stats = system.run(ONE_DAY, seed=0xDEADBEEF)
 
