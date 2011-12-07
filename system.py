@@ -15,8 +15,6 @@ class System(object):
         
     def run(self, duration, seed=None):
         self.reset(seed)
-        event = self.generate_initial_event()
-        self.feq.schedule_event(event)
         while self.feq.has_events():
             event = self.feq.next_event()
             self.clock.update(event.time)
@@ -26,12 +24,13 @@ class System(object):
             self.handle(event)
         return self.stats
         
-    def initialize(self):
-        """ System-specific variables are initialized here """
-        pass
+    def schedule_event(self, event):
+        """ Convenience function """
+        self.feq.schedule_event(event)
         
-    def generate_initial_event(self):
-        """ Returns the initial event in the simulation """
+    def initialize(self):
+        """ System-specific variables are initialized here and the
+            first event is scheduled """
         pass
         
     def update(self):
