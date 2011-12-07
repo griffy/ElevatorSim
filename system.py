@@ -22,7 +22,8 @@ class System(object):
             self.clock.update(event.time)
             if self.clock.has_run(duration):
                 break
-            self.simulate(event)
+            self.update()
+            self.handle(event)
         return self.stats
         
     def initialize(self):
@@ -33,7 +34,13 @@ class System(object):
         """ Returns the initial event in the simulation """
         pass
         
-    def simulate(self, event):
+    def update(self):
+        """ Anything that must be updated every single iteration
+            regardless of event type goes here
+        """
+        pass
+        
+    def handle(self, event):
         """ Updating of system state and stats, and scheduling of next event
             should go here """
         pass
