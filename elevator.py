@@ -157,7 +157,7 @@ class Elevator(object):
     def __init__(self, type_):
         self.type = type_
         
-    def pick_floor(time):
+    def pick_floor(self, time):
         """ picks a floor it is going to based on the time of day and type
             time must be in seconds where 0 is 5am
         """
