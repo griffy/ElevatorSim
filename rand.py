@@ -20,16 +20,16 @@ def generator(distr_map):
     def generate():
         rand = random.random()
         lower_bound = 0
-        cur_key = 0
-        for key, val in distr_map.iteritems():
-            cur_key += 1
+        for value, probability in distr_map.iteritems():
             if lower_bound == 0:
-                if rand <= val:
-                    return key
+                # this is the first iteration, and it's possible
+                # rand could be 0 so we do a special if statement
+                if rand <= probability:
+                    return value
             else:
-                if lower_bound < rand <= (lower_bound + val):
-                    return key
-            lower_bound += val
+                if lower_bound < rand <= (lower_bound + probability):
+                    return value
+            lower_bound += probability
     return generate
     
 def uniform(a, b):
