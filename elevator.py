@@ -180,13 +180,13 @@ TYPE_E = 3
 class Elevator(object):
     def __init__(self, type_):
         self.type = type_
-        if(self.type = TYPE_F):
+        if self.type = TYPE_F:
         	self.capacity = 11
-        elif(self.type = TYPE_L):
+        elif self.type = TYPE_L:
         	self.capacity = 10
-        elif(self.type = TYPE_I):
+        elif self.type = TYPE_I:
         	self.capacity = 10
-        if(self.type = TYPE_E):
+        elif self.type = TYPE_E:
         	self.capacity = 11
         
     def pick_floor(self, time):
