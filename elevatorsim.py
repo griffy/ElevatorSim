@@ -14,10 +14,10 @@ class ElevatorArriveEvent(Event):
 
 class ElevatorSystem(System):
     def initialize(self):
-        self.elevator_groups = [ElevatorGroup(elevator.TYPE_F, 3),
+        self.elevator_groups = [ElevatorGroup(elevator.TYPE_F, 2),
                                 ElevatorGroup(elevator.TYPE_L, 3),
-                                ElevatorGroup(elevator.TYPE_I, 3),
-                                ElevatorGroup(elevator.TYPE_E, 3)]
+                                ElevatorGroup(elevator.TYPE_I, 1),
+                                ElevatorGroup(elevator.TYPE_E, 2)]
         time = 0
         for elevator_group in self.elevator_groups:
             # schedule arrival of all elevators at time 0
@@ -43,17 +43,15 @@ class ElevatorSystem(System):
                     elevator.num_passengers = group.pool
                     group.pool = 0
                 # schedule next arrival
-                
+                cur_time = self.clock.time()
+                service_time = elevator.service_time(cur_time)
+                time = cur_time + service_time
+                self.schedule_event(ElevatorArriveEvent(time, group, index))
             else:
                 # TODO
-                # schedule next arrival
+                # schedule next arrival at beginning of next 5 min period
                 pass
-                
-            self.stats.num_passengers = rand.poisson(5, 1)
-            self.stats.floor_selected = self.elevators[0].pick_floor(self.clock.time())
-            self.schedule_event(PassengerDepartEvent(event.time+1))
-        elif isinstance(event, PassengerDepartEvent):
-            self.schedule_event(PassengerArriveEvent(event.time+5))
+
         
         
         

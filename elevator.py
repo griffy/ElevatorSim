@@ -165,6 +165,7 @@ TYPE_E = 3
 class Elevator(object):
     def __init__(self, type_):
         self.type = type_
+        self.num_passengers = 0
         if self.type = TYPE_F:
         	self.capacity = 11
         elif self.type = TYPE_L:
@@ -190,6 +191,10 @@ class Elevator(object):
         elif afternoon_end < time <= evening_end:
             return distrs[self.type]['evening']()
             
+    # TODO
+    def service_time(self, time):
+        return self.idle_time(time) + self.busy_time(time) + ...
+        
     def idle_time(self, time):
         if self.type == TYPE_F:
             morning_end = 6*60*60 # 11am
