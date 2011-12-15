@@ -6,9 +6,11 @@ import elevator
 
 ONE_DAY = 24*60*60 # in seconds
 
-# this event would have a Passenger entity passed to it upon creation
-class PassengerArriveEvent(Event): pass
-class PassengerDepartEvent(Event): pass
+class ElevatorArriveEvent(Event):
+    def __init__(self, time, group, index):
+        Event.__init__(self, time)
+        self.elevator_group = group
+        self.elevator_index = index
 
 class ElevatorSystem(System):
     def initialize(self):
@@ -17,18 +19,44 @@ class ElevatorSystem(System):
                                 ElevatorGroup(elevator.TYPE_I, 3),
                                 ElevatorGroup(elevator.TYPE_E, 3)]
         time = 0
-        self.schedule_event(PassengerArriveEvent(time))
+        for elevator_group in self.elevator_groups:
+            # schedule arrival of all elevators at time 0
+            for i in range(elevator_group.count):
+                self.schedule_event(ElevatorArriveEvent(time, elevator_group, i))
         
     def update(self):
-        pass
+        if self.clock.time() % 300 == 0:
         
     def handle(self, event):
-        if isinstance(event, PassengerArriveEvent):
+        if isinstance(event, ElevatorArriveEvent):
+            group = event.elevator_group
+            index = event.elevator_index
+            elevator = group.elevators[index]
+            if not group.in_period:
+                group.create_passengers()
+
+            if group.pool > 0:
+                if group.pool > elevator.capacity:
+                    elevator.num_passengers = elevator.capacity
+                    group.pool -= elevator.num_passengers
+                else:
+                    elevator.num_passengers = group.pool
+                    group.pool = 0
+                # schedule next arrival
+                
+            else:
+                # TODO
+                # schedule next arrival
+                pass
+                
             self.stats.num_passengers = rand.poisson(5, 1)
             self.stats.floor_selected = self.elevators[0].pick_floor(self.clock.time())
             self.schedule_event(PassengerDepartEvent(event.time+1))
         elif isinstance(event, PassengerDepartEvent):
             self.schedule_event(PassengerArriveEvent(event.time+5))
+        
+        
+        
         
 # Use Case #3: If we call run with the same seed parameter each time, not
 #              only will our results be predictable (reproducable) each time
