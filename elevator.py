@@ -141,6 +141,30 @@ TYPE_E_DISTRS = {
                })
 }
 
+TIME_F_DISTRS = {
+    'morning': {3, 5, 1, 2, 2, 1, 3, 3, 8, 1, 8, 3},
+    'afternoon': None,
+    'evening': {2, 0, 0, 0, 0, 0, 3, 1, 1, 0, 0}
+}
+
+TIME_L_DISTRS = {
+    'morning': {3, 3, 5, 5, 10, 1, 1, 1, 8, 11, 3, 11},
+    'afternoon': None,
+    'evening': {1, 1, 1, 3, 0, 0, 2, 0, 1, 3, 0, 0}
+}
+
+TIME_I_DISTRS = {
+    'morning': {8, 7, 4, 2, 2, 7, 3, 5, 5, 9, 10, 10},
+    'afternoon': None,
+    'evening': {0, 1, 0, 2, 1, 3, 3, 1, 1, 0, 1, 0}
+}
+
+TIME_E_DISTRS = {
+    'morning': {3, 0, 0, 0, 2, 2, 6, 3, 3, 5, 5, 5},
+    'afternoon': None,
+    'evening': {1, 2, 1, 0, 1, 1, 1, 0, 0, 0, 2, 0}
+}
+
 distrs = [
     TYPE_F_DISTRS,
     TYPE_L_DISTRS,
@@ -156,6 +180,14 @@ TYPE_E = 3
 class Elevator(object):
     def __init__(self, type_):
         self.type = type_
+        if(self.type = TYPE_F):
+        	self.capacity = 11
+        elif(self.type = TYPE_L):
+        	self.capacity = 10
+        elif(self.type = TYPE_I):
+        	self.capacity = 10
+        if(self.type = TYPE_E):
+        	self.capacity = 11
         
     def pick_floor(self, time):
         """ picks a floor it is going to based on the time of day and type
