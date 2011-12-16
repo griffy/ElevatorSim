@@ -8,6 +8,9 @@ from elevator import types, TYPE_F, TYPE_L, TYPE_I, TYPE_E
 
 ELEVATOR_PASSENGERS_STAT = 'elevator_%s_%d_num_passengers'
 GROUP_POOL_STAT = 'elevator_group_%s_pool_size'
+ELEVATOR_IDLE_STAT = 'elevator_%s_%d_idle_time'
+ELEVATOR_BUSY_STAT = 'elevator_%s_%d_busy_time'
+ELEVATOR_TRAVEL_STAT = 'elevator_%s_%d_travel_time'
 
 class ElevatorArriveEvent(Event):
     def __init__(self, time, group, index):
@@ -43,7 +46,7 @@ class ElevatorSystem(System):
             group = event.elevator_group
             index = event.elevator_index
             elevator = group.elevators[index]
-            
+             
             if group.pool > 0:
                 if group.pool > elevator.capacity:
                     elevator.num_passengers = elevator.capacity
@@ -56,15 +59,29 @@ class ElevatorSystem(System):
                                elevator.num_passengers)
                 # schedule next arrival
                 cur_time = self.clock.time()
-                service_time = elevator.service_time(cur_time)
+                
+                idle_time = elevator.idle_time(cur_time)
+                busy_time = elevator.busy_time(cur_time)
+                travel_time = elevator.travel_time(cur_time)
+                # track the times
+                self.stats.add(ELEVATOR_IDLE_STAT % 
+                                    (types[elevator.type], index),
+                               idle_time)
+                self.stats.add(ELEVATOR_BUSY_STAT % 
+                                    (types[elevator.type], index),
+                               busy_time)
+                self.stats.add(ELEVATOR_TRAVEL_STAT % 
+                                    (types[elevator.type], index),
+                               travel_time)
+
+                service_time = idle_time + busy_time + travel_time
+
                 time = cur_time + service_time
                 self.schedule_event(ElevatorArriveEvent(time, group, index))
             else:
             	time = group.next_gen*60
             	self.schedule_event(ElevatorArriveEvent(time, group, index))
-        
-        
-        
+# TODO: add finalize method
         
 # Use Case #3: If we call run with the same seed parameter each time, not
 #              only will our results be predictable (reproducable) each time

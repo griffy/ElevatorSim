@@ -218,9 +218,6 @@ class Elevator(object):
         print "time: " + str(time), floors
         return floors
 
-    def service_time(self, time):
-        return self.idle_time(time) + self.busy_time(time) + self.travel_time(time)
-
     def travel_time(self, time):
         floors = self.generate_floor_selections(time)
         t_time = 0
