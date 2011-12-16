@@ -177,6 +177,13 @@ TYPE_L = 1
 TYPE_I = 2
 TYPE_E = 3
 
+types = [
+    'F',
+    'L',
+    'I',
+    'E'
+]
+
 class Elevator(object):
     def __init__(self, type_):
         self.type = type_

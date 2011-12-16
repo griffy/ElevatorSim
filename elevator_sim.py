@@ -3,10 +3,14 @@ from event import Event
 from elevator import Elevator
 from elevator_group import ElevatorGroup
 import rand
-import elevator
+from elevator import types, TYPE_F, TYPE_L, TYPE_I, TYPE_E
 
+# TODO: change day to mean 'morning afternoon or evening periods'
 ONE_DAY = 24*60*60 # in seconds
     
+ELEVATOR_PASSENGERS_STAT = 'elevator_%s_%d_num_passengers'
+GROUP_POOL_STAT = 'elevator_group_%s_pool_size'
+
 class ElevatorArriveEvent(Event):
     def __init__(self, time, group, index):
         Event.__init__(self, time)
@@ -15,10 +19,10 @@ class ElevatorArriveEvent(Event):
 
 class ElevatorSystem(System):
     def initialize(self):
-        self.elevator_groups = [ElevatorGroup(elevator.TYPE_F, 2, 2),
-                                ElevatorGroup(elevator.TYPE_L, 3, 3),
-                                ElevatorGroup(elevator.TYPE_I, 1, 1),
-                                ElevatorGroup(elevator.TYPE_E, 2, 2)]
+        self.elevator_groups = [ElevatorGroup(TYPE_F, 2, 2),
+                                ElevatorGroup(TYPE_L, 3, 3),
+                                ElevatorGroup(TYPE_I, 1, 1),
+                                ElevatorGroup(TYPE_E, 2, 2)]
         time = 0
         for elevator_group in self.elevator_groups:
             # schedule arrival of all elevators at time 0
@@ -26,16 +30,16 @@ class ElevatorSystem(System):
                 self.schedule_event(ElevatorArriveEvent(time, elevator_group, i))
         
     def update(self):
-    	temp = self.clock.time() / 60
-    	#print temp
+    	time_in_minutes = self.clock.time() / 60
         for elevator_group in self.elevator_groups:
-    		if elevator_group.next_gen <= temp:
-        		while elevator_group.next_gen <= temp:
+    		if elevator_group.next_gen <= time_in_minutes:
+        		while elevator_group.next_gen <= time_in_minutes:
         			elevator_group.next_gen += 5
-        		print self.clock.time()
         		elevator_group.create_passengers(self.clock.time())
-        		print "generated passengers\n"
-        
+                # mark down this amount
+                self.stats.add(GROUP_POOL_STAT % types[elevator_group.type],
+                               elevator_group.pool)
+
     def handle(self, event):
         if isinstance(event, ElevatorArriveEvent):
             group = event.elevator_group
@@ -49,17 +53,17 @@ class ElevatorSystem(System):
                 else:
                     elevator.num_passengers = group.pool
                     group.pool = 0
-                    #print elevator.num_passengers
+                self.stats.add(ELEVATOR_PASSENGERS_STAT % 
+                                    (types[elevator.type], index),
+                               elevator.num_passengers)
                 # schedule next arrival
                 cur_time = self.clock.time()
                 service_time = elevator.service_time(cur_time)
                 time = cur_time + service_time
                 self.schedule_event(ElevatorArriveEvent(time, group, index))
             else:
-            	#print self.clock.time()
-            	temp = group.next_gen*60
-            	self.schedule_event(ElevatorArriveEvent(temp, group, index))
-
+            	time = group.next_gen*60
+            	self.schedule_event(ElevatorArriveEvent(time, group, index))
         
         
         
@@ -75,18 +79,4 @@ class ElevatorSystem(System):
 system = ElevatorSystem()
 stats = system.run(ONE_DAY, seed=0xDEADBEEF)
 
-print "num_passengers list:", stats.num_passengers
-print "total num_passengers:", stats.total_num_passengers
-print "median of num_passengers list:", stats.median_num_passengers
-print "mode of num_passengers list:", stats.mode_num_passengers
-print "mean of num_passengers list:", stats.mean_num_passengers
-print "standard deviation of num_passengers list:", stats.stdev_num_passengers
-
-stats = system.run(ONE_DAY, seed=0xDEADBEEF)
-
-print "num_passengers list:", stats.num_passengers
-print "total num_passengers:", stats.total_num_passengers
-print "median of num_passengers list:", stats.median_num_passengers
-print "mode of num_passengers list:", stats.mode_num_passengers
-print "mean of num_passengers list:", stats.mean_num_passengers
-print "standard deviation of num_passengers list:", stats.stdev_num_passengers
+print stats

@@ -18,6 +18,9 @@ class Stats(object):
             self._init_stat(stat)
         self._stats[stat].append(sample_point)
         
+    def get(self, stat):
+        return self._stats[stat]
+
     def total(self, stat):
         return sum(self._stats[stat])
         
@@ -80,7 +83,7 @@ class Stats(object):
             stat = name.replace('stdev_', '', 1)
             return self.stdev(stat)
         # else they must want the list of sample points stored in the stat
-        return self._stats[name]
+        return self.get(name)
             
     def __setattr__(self, name, val):
         """ Syntactic sugar to add a sample point to a statistic
@@ -100,3 +103,15 @@ class Stats(object):
         else:
             self.add(name, val)
         
+    def __str__(self):
+        res = ''
+        for stat in self._stats.keys():
+            res += stat + ': %s\n' % str(self.get(stat))
+            res += stat + ' total: %s\n' % self.total(stat)
+            res += stat + ' mean: %s\n' % self.mean(stat)
+            res += stat + ' median: %s\n' % self.median(stat)
+            res += stat + ' mode: %s\n' % self.mode(stat)
+            res += stat + ' stdev: %s\n' % self.stdev(stat)
+            res += '\n'
+        return res
+   
