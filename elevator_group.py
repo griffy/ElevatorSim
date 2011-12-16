@@ -8,6 +8,7 @@ class ElevatorGroup(object):
         self.in_period = False
         self.already_created = False
         self.pool = 0
+        self.next_gen = 0
         
     def create_passengers(self):
         if not self.already_created:
