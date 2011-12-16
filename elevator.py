@@ -126,6 +126,46 @@ TYPE_E_FLOOR_DISTRS = {
                })
 }
 
+TRAVEL_TIME = {
+		0: 0,
+		1: 4,
+		2: 7,
+		3: 8,
+		4: 9,
+		5: 10,
+		6: 10,
+		7: 12,
+		8: 13,
+		9: 14,
+		10: 15,
+		11: 16,
+		12: 11,
+		13: 17,
+		14: 19,
+		15: 20,
+		16: 21,
+		17: 22,
+		18: 23,
+		19: 24,
+		20: 25,
+		21: 25,
+		22: 26,
+		23: 26,
+		24: 28,
+		25: 29,
+		26: 30,
+		27: 31,
+		28: 32,
+		29: 33,
+		30: 34,
+		31: 35,
+		32: 36,
+		33: 37,
+		34: 38,
+		35: 39,
+		36: 40
+}
+
 floor_distrs = [
     TYPE_F_FLOOR_DISTRS,
     TYPE_L_FLOOR_DISTRS,
@@ -165,7 +205,7 @@ class Elevator(object):
             
     # TODO
     def service_time(self, time):
-        return self.idle_time(time) + self.busy_time(time)
+        return self.idle_time(time) + self.busy_time(time) + 
         
     def idle_time(self, time):
         if self.type == TYPE_F:
