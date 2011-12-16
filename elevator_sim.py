@@ -25,16 +25,19 @@ class ElevatorSystem(System):
                 self.schedule_event(ElevatorArriveEvent(time, elevator_group, i))
         
     def update(self):
-        if self.clock.time() % 300 == 0:
+    	temp = self.clock.time() / 300
+        for elevator_group in self.elevator_groups:
+    		if elevator_group.next_gen <= temp:
+        		while elevator_group.next_gen <= temp:
+        			elevator_group.next_gen += 5
+        		elevator_group.create_passengers()
         
     def handle(self, event):
         if isinstance(event, ElevatorArriveEvent):
             group = event.elevator_group
             index = event.elevator_index
             elevator = group.elevators[index]
-            if not group.in_period:
-                group.create_passengers()
-
+            
             if group.pool > 0:
                 if group.pool > elevator.capacity:
                     elevator.num_passengers = elevator.capacity
