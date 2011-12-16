@@ -106,7 +106,7 @@ class Stats(object):
     def __str__(self):
         res = ''
         for stat in self._stats.keys():
-            res += stat + ': %s\n' % str(self.get(stat))
+#            res += stat + ': %s\n' % str(self.get(stat))
             res += stat + ' total: %s\n' % self.total(stat)
             res += stat + ' mean: %s\n' % self.mean(stat)
             res += stat + ' median: %s\n' % self.median(stat)

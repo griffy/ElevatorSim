@@ -3,11 +3,9 @@ from event import Event
 from elevator import Elevator
 from elevator_group import ElevatorGroup
 import rand
+import period
 from elevator import types, TYPE_F, TYPE_L, TYPE_I, TYPE_E
 
-# TODO: change day to mean 'morning afternoon or evening periods'
-ONE_DAY = 24*60*60 # in seconds
-    
 ELEVATOR_PASSENGERS_STAT = 'elevator_%s_%d_num_passengers'
 GROUP_POOL_STAT = 'elevator_group_%s_pool_size'
 
@@ -77,6 +75,6 @@ class ElevatorSystem(System):
 #              I believe this is what we could use for Correlated Sampling
 #              as was discussed in class.
 system = ElevatorSystem()
-stats = system.run(ONE_DAY, seed=0xDEADBEEF)
+stats = system.run(period.ONE_DAY, seed=0xDEADBEEF)
 
 print stats
