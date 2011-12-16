@@ -126,6 +126,45 @@ TYPE_E_FLOOR_DISTRS = {
                })
 }
 
+TRAVEL_TIMES = {
+		0: 0,
+		1: 4,
+		2: 7,
+		3: 8,
+		4: 9,
+		5: 10,
+		6: 10,
+		7: 12,
+		8: 13,
+		9: 14,
+		10: 15,
+		11: 16,
+		12: 11,
+		13: 17,
+		14: 19,
+		15: 20,
+		16: 21,
+		17: 22,
+		18: 23,
+		19: 24,
+		20: 25,
+		21: 25,
+		22: 26,
+		23: 26,
+		24: 28,
+		25: 29,
+		26: 30,
+		27: 31,
+		28: 32,
+		29: 33,
+		30: 34,
+		31: 35,
+		32: 36,
+		33: 37,
+		34: 38,
+		35: 39,
+}
+
 floor_distrs = [
     TYPE_F_FLOOR_DISTRS,
     TYPE_L_FLOOR_DISTRS,
@@ -172,7 +211,14 @@ class Elevator(object):
         return self.idle_time(time) + self.busy_time(time) + self.travel_time(time)
 
     def travel_time(self, time):
-        
+        floors = self.generate_floor_selections(time)
+        t_time = 0
+        cur_floor = 0
+        for i in range(len(floors)):
+            floor_diff = floors[i] - cur_floor
+            t_time += TRAVEL_TIMES[floor_diff]
+            cur_floor = floors[i]
+        return t_time
 
     def idle_time(self, time):
         if self.type == TYPE_F:
