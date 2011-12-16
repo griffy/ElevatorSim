@@ -7,10 +7,14 @@ import period
 from elevator import types, TYPE_F, TYPE_L, TYPE_I, TYPE_E
 
 ELEVATOR_PASSENGERS_STAT = 'elevator_%s_%d_num_passengers'
-GROUP_POOL_STAT = 'elevator_group_%s_pool_size'
 ELEVATOR_IDLE_STAT = 'elevator_%s_%d_idle_time'
 ELEVATOR_BUSY_STAT = 'elevator_%s_%d_busy_time'
 ELEVATOR_TRAVEL_STAT = 'elevator_%s_%d_travel_time'
+GROUP_POOL_STAT = 'elevator_group_%s_pool_size'
+GROUP_PASSENGERS_STAT = 'elevator_group_%s_num_passengers'
+GROUP_IDLE_STAT = 'elevator_group_%s_idle_time'
+GROUP_BUSY_STAT = 'elevator_group_%s_busy_time'
+GROUP_TRAVEL_STAT = 'elevator_group_%s_travel_time'
 
 class ElevatorArriveEvent(Event):
     def __init__(self, time, group, index):
@@ -85,16 +89,77 @@ class ElevatorSystem(System):
             	self.schedule_event(ElevatorArriveEvent(time, group, index))
         
     def finalize(self):
-        pass
-# Use Case #3: If we call run with the same seed parameter each time, not
-#              only will our results be predictable (reproducable) each time
-#              we run the program, but the individual calls will have the
-#              same random values. Therefore, in this example, the results
-#              are the same for each call to run().
-#
-#              I believe this is what we could use for Correlated Sampling
-#              as was discussed in class.
-system = ElevatorSystem()
-stats = system.run(period.ONE_DAY, seed=0xDEADBEEF)
+        for elevator_group in self.elevator_groups:
+            for i in range(len(elevator_group.elevators)):
+                elevator = elevator_group.elevators[i]
+                num_passengers_list = self.stats.get(ELEVATOR_PASSENGERS_STAT %
+                                                    (types[elevator.type], i))
+                self.stats.add(GROUP_PASSENGERS_STAT % types[elevator.type], 
+                               num_passengers_list)
+                idle_time_list = self.stats.get(ELEVATOR_IDLE_STAT %
+                                                    (types[elevator.type], i))
+                self.stats.add(GROUP_IDLE_STAT % types[elevator.type], 
+                               idle_time_list)
+                busy_time_list = self.stats.get(ELEVATOR_BUSY_STAT %
+                                                    (types[elevator.type], i))
+                self.stats.add(GROUP_BUSY_STAT % types[elevator.type], 
+                               busy_time_list)
+                travel_time_list = self.stats.get(ELEVATOR_TRAVEL_STAT %
+                                                    (types[elevator.type], i))
+                self.stats.add(GROUP_TRAVEL_STAT % types[elevator.type], 
+                               travel_time_list)
 
-print stats
+
+# If we call run with the same seed parameter each time, not
+# only will our results be predictable (reproducable) each time
+# we run the program, but the individual calls will have the
+# same random values.
+#
+# This can be used for Correlated Sampling
+system = ElevatorSystem()
+stats = system.run(1000, period.ONE_DAY, seed=0xDEADBEEF)
+
+group_order = [
+    GROUP_POOL_STAT % 'F',
+    GROUP_POOL_STAT % 'L',
+    GROUP_POOL_STAT % 'I',
+    GROUP_POOL_STAT % 'E',
+
+    GROUP_PASSENGERS_STAT % 'F',
+    GROUP_PASSENGERS_STAT % 'L',
+    GROUP_PASSENGERS_STAT % 'I',
+    GROUP_PASSENGERS_STAT % 'E',
+
+    GROUP_IDLE_STAT % 'F',
+    GROUP_IDLE_STAT % 'L',
+    GROUP_IDLE_STAT % 'I',
+    GROUP_IDLE_STAT % 'E',
+
+    GROUP_BUSY_STAT % 'F',
+    GROUP_BUSY_STAT % 'L',
+    GROUP_BUSY_STAT % 'I',
+    GROUP_BUSY_STAT % 'E',
+
+    GROUP_TRAVEL_STAT % 'F',
+    GROUP_TRAVEL_STAT % 'L',
+    GROUP_TRAVEL_STAT % 'I',
+    GROUP_TRAVEL_STAT % 'E'
+]
+
+individual_order = []
+for elevator_group in system.elevator_groups:
+    for i in range(len(elevator_group.elevators)):
+        individual_order.append(ELEVATOR_PASSENGERS_STAT %
+                               (types[elevator_group.type], i))
+        individual_order.append(ELEVATOR_IDLE_STAT %
+                               (types[elevator_group.type], i))
+        individual_order.append(ELEVATOR_BUSY_STAT %
+                               (types[elevator_group.type], i))
+        individual_order.append(ELEVATOR_TRAVEL_STAT %
+                               (types[elevator_group.type], i))
+output_order = []
+output_order.extend(group_order)
+output_order.extend(individual_order)
+
+stats_output = stats.__str__(ordered_stats=output_order)
+print stats_output

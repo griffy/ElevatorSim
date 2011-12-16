@@ -16,7 +16,11 @@ class Stats(object):
         if stat not in self._stats:
             # the statistic does not exist yet, so we initialize it
             self._init_stat(stat)
-        self._stats[stat].append(sample_point)
+        if isinstance(sample_point, list):
+            # if a list was added, add all the points in that list
+            self._stats[stat].extend(sample_point)
+        else:
+            self._stats[stat].append(sample_point)
         
     def get(self, stat):
         return self._stats[stat]
@@ -103,15 +107,25 @@ class Stats(object):
         else:
             self.add(name, val)
         
-    def __str__(self):
+    def str(self, stat):
         res = ''
-        for stat in self._stats.keys():
-#            res += stat + ': %s\n' % str(self.get(stat))
-            res += stat + ' total: %s\n' % self.total(stat)
-            res += stat + ' mean: %s\n' % self.mean(stat)
-            res += stat + ' median: %s\n' % self.median(stat)
-            res += stat + ' mode: %s\n' % self.mode(stat)
-            res += stat + ' stdev: %s\n' % self.stdev(stat)
-            res += '\n'
+        #res += stat + ': %s\n' % str(self.get(stat))
+        res += stat + ' total: %s\n' % self.total(stat)
+        res += stat + ' mean: %s\n' % self.mean(stat)
+        res += stat + ' median: %s\n' % self.median(stat)
+        res += stat + ' mode: %s\n' % self.mode(stat)
+        res += stat + ' stdev: %s\n' % self.stdev(stat)
+        return res
+
+    def __str__(self, ordered_stats=None):
+        res = ''
+        if ordered_stats is None:
+            for stat in self._stats.keys():
+                res += self.str(stat)
+                res += '\n'
+        else:
+            for stat in ordered_stats:
+                res += self.str(stat)
+                res += '\n'
         return res
    
