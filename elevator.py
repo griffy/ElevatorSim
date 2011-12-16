@@ -1,7 +1,7 @@
 # We use a probability of 0.01 in place of floors that did not have any
 # passengers get off on
 
-TYPE_F_DISTRS = {
+TYPE_F_FLOOR_DISTRS = {
     'morning': generator({18: 1/38.0,
                           21: 3/38.0,
                           24: 6/38.0,
@@ -24,7 +24,7 @@ TYPE_F_DISTRS = {
                })
 }
 
-TYPE_L_DISTRS = {
+TYPE_L_FLOOR_DISTRS = {
     'morning': generator({5: 13/62.0,
                           8: 17/62.0,
                           10: 7/62.0,
@@ -52,7 +52,7 @@ TYPE_L_DISTRS = {
                })
 }
 
-TYPE_I_DISTRS = {
+TYPE_I_FLOOR_DISTRS = {
     'morning': generator({5: 23/71.0,
                           8: 7/71.0,
                           10: 7/71.0,
@@ -82,7 +82,7 @@ TYPE_I_DISTRS = {
                })
 }
 
-TYPE_E_DISTRS = {
+TYPE_E_FLOOR_DISTRS = {
     'morning': generator({3: 4/28.0,
                           4: 3/28.0,
                           5: 1/28.0,
@@ -126,35 +126,35 @@ TYPE_E_DISTRS = {
                })
 }
 
-TIME_F_DISTRS = {
+TYPE_F_TIME_DISTRS = {
     'morning': {3, 5, 1, 2, 2, 1, 3, 3, 8, 1, 8, 3},
     'afternoon': None,
     'evening': {2, 0, 0, 0, 0, 0, 3, 1, 1, 0, 0}
 }
 
-TIME_L_DISTRS = {
+TYPE_L_TIME_DISTRS = {
     'morning': {3, 3, 5, 5, 10, 1, 1, 1, 8, 11, 3, 11},
     'afternoon': {1, 10, 1, 4, 1, 6, 3, 2, 11, 11, 13, 2},
     'evening': {1, 1, 1, 3, 0, 0, 2, 0, 1, 3, 0, 0}
 }
 
-TIME_I_DISTRS = {
+TYPE_I_TIME_DISTRS = {
     'morning': {8, 7, 4, 2, 2, 7, 3, 5, 5, 9, 10, 10},
     'afternoon': {1, 2, 5, 5, 5, 3, 12, 7, 1, 0, 11, 3},
     'evening': {0, 1, 0, 2, 1, 3, 3, 1, 1, 0, 1, 0}
 }
 
-TIME_E_DISTRS = {
+TYPE_E_TIME_DISTRS = {
     'morning': {3, 0, 0, 0, 2, 2, 6, 3, 3, 5, 5, 5},
     'afternoon': {2, 2, 2, 0, 0, 2, 9, 5, 3, 6, 4, 4},
     'evening': {1, 2, 1, 0, 1, 1, 1, 0, 0, 0, 2, 0}
 }
 
-distrs = [
-    TYPE_F_DISTRS,
-    TYPE_L_DISTRS,
-    TYPE_I_DISTRS,
-    TYPE_E_DISTRS
+floor_distrs = [
+    TYPE_F_FLOOR_DISTRS,
+    TYPE_L_FLOOR_DISTRS,
+    TYPE_I_FLOOR_DISTRS,
+    TYPE_E_FLOOR_DISTRS
 ]
 
 TYPE_F = 0
@@ -185,11 +185,11 @@ class Elevator(object):
         evening_end = afternoon_end + 6*60*60
         
         if 0 <= time <= morning_end: #11am
-            return distrs[self.type]['morning']()
+            return floor_distrs[self.type]['morning']()
         elif morning_end < time <= afternoon_end:
-            return distrs[self.type]['afternoon']()
+            return floor_distrs[self.type]['afternoon']()
         elif afternoon_end < time <= evening_end:
-            return distrs[self.type]['evening']()
+            return floor_distrs[self.type]['evening']()
             
     # TODO
     def service_time(self, time):
