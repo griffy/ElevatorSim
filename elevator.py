@@ -9,13 +9,11 @@ TYPE_F_FLOOR_DISTRS = {
                           33: 1/38.0,
                           36: 14/38.0
                }),
-    'afternoon': generator({18: ,
-                          	21: ,
-                          	24: ,
-                          	27: ,
-                          	30: ,
-                          	33: ,
-                          	36: 
+    'afternoon': generator({18: 1/14.0,
+                          	21: 2/14.0,
+                          	24: 2/14.0,
+                          	27: 5/14.0,
+                          	36: 4/14.0
     			}),
     'evening': generator({24: 2/7.0,
                           27: 1/7.0,
@@ -172,7 +170,7 @@ class Elevator(object):
             if is_morning(time):
                 return 29
             elif is_afternoon(time):
-                return -1
+                return 6
             elif is_evening(time):
                 return 277
         elif self.type == TYPE_L:
