@@ -162,7 +162,7 @@ TRAVEL_TIMES = {
 		32: 36,
 		33: 37,
 		34: 38,
-		35: 39
+		35: 39,
 }
 
 floor_distrs = [
@@ -196,16 +196,37 @@ class Elevator(object):
         """
         
         if is_morning(time):
-            return floor_distrs[self.type]['morning']()
+            f = floor_distrs[self.type]['morning']()
+            print "morning: " + str(f)
+            return f
         elif is_afternoon(time):
-            return floor_distrs[self.type]['afternoon']()
+            f = floor_distrs[self.type]['afternoon']()
+            print "afternoon: " + str(f)
+            return f
         elif is_evening(time):
-            return floor_distrs[self.type]['evening']()
+            f = floor_distrs[self.type]['evening']()
+            print "evening: " + str(f)
+            return f
             
-    # TODO
+    def generate_floor_selections(self, time):
+        floors = [self.pick_floor(time) for i in range(self.num_passengers)]
+        floors.sort()
+        print "time: " + str(time), floors
+        return floors
+
     def service_time(self, time):
-        return self.idle_time(time) + self.busy_time(time) + 
-        
+        return self.idle_time(time) + self.busy_time(time) + self.travel_time(time)
+
+    def travel_time(self, time):
+        floors = self.generate_floor_selections(time)
+        t_time = 0
+        cur_floor = 1 
+        for i in range(len(floors)):
+            floor_diff = floors[i] - cur_floor
+            t_time += TRAVEL_TIMES[floor_diff]
+            cur_floor = floors[i]
+        return t_time
+
     def idle_time(self, time):
         if self.type == TYPE_F:
             if is_morning(time):
