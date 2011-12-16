@@ -49,11 +49,11 @@ class ElevatorSystem(System):
              
             if group.pool > 0:
                 if group.pool > elevator.capacity:
-                    elevator.num_passengers = elevator.capacity
-                    group.pool -= elevator.num_passengers
+                    elevator.num_passengers = rand.uniform(1, elevator.capacity)
                 else:
-                    elevator.num_passengers = group.pool
-                    group.pool = 0
+                    elevator.num_passengers = rand.uniform(1, group.pool)
+                group.pool -= elevator.num_passengers
+                # mark down the amount of passengers on board
                 self.stats.add(ELEVATOR_PASSENGERS_STAT % 
                                     (types[elevator.type], index),
                                elevator.num_passengers)
@@ -63,7 +63,7 @@ class ElevatorSystem(System):
                 idle_time = elevator.idle_time(cur_time)
                 busy_time = elevator.busy_time(cur_time)
                 travel_time = elevator.travel_time(cur_time)
-                # track the times
+                # mark down the times
                 self.stats.add(ELEVATOR_IDLE_STAT % 
                                     (types[elevator.type], index),
                                idle_time)
@@ -79,7 +79,9 @@ class ElevatorSystem(System):
                 time = cur_time + service_time
                 self.schedule_event(ElevatorArriveEvent(time, group, index))
             else:
-            	time = group.next_gen*60
+                # next_period - cur_time = idle_time
+                # TODO: track idle time
+            	time = group.next_gen * 60
             	self.schedule_event(ElevatorArriveEvent(time, group, index))
         
     def finalize(self):
