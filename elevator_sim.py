@@ -30,7 +30,7 @@ class ElevatorSystem(System):
     		if elevator_group.next_gen <= temp:
         		while elevator_group.next_gen <= temp:
         			elevator_group.next_gen += 5
-        		elevator_group.create_passengers()
+        		elevator_group.create_passengers(self.clock.time())
         
     def handle(self, event):
         if isinstance(event, ElevatorArriveEvent):
