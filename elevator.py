@@ -126,7 +126,7 @@ TYPE_E_FLOOR_DISTRS = {
                })
 }
 
-TRAVEL_TIME = {
+TRAVEL_TIMES = {
 		0: 0,
 		1: 4,
 		2: 7,
