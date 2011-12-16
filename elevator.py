@@ -196,17 +196,14 @@ class Elevator(object):
         """
         
         if is_morning(time):
-            f = floor_distrs[self.type]['morning']()
-            print "morning: " + str(f)
-            return f
+            f = floor_distrs[self.type]['morning']
+            return f()
         elif is_afternoon(time):
-            f = floor_distrs[self.type]['afternoon']()
-            print "afternoon: " + str(f)
-            return f
+            f = floor_distrs[self.type]['afternoon']
+            return f()
         elif is_evening(time):
-            f = floor_distrs[self.type]['evening']()
-            print "evening: " + str(f)
-            return f
+            f = floor_distrs[self.type]['evening']
+            return f()
             
     def generate_floor_selections(self, time):
         floors = [self.pick_floor(time) for i in range(self.num_passengers)]

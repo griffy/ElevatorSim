@@ -15,10 +15,10 @@ class ElevatorArriveEvent(Event):
 
 class ElevatorSystem(System):
     def initialize(self):
-        self.elevator_groups = [ElevatorGroup(elevator.TYPE_F, 2),
-                                ElevatorGroup(elevator.TYPE_L, 3),
-                                ElevatorGroup(elevator.TYPE_I, 1),
-                                ElevatorGroup(elevator.TYPE_E, 2)]
+        self.elevator_groups = [ElevatorGroup(elevator.TYPE_F, 2, 2),
+                                ElevatorGroup(elevator.TYPE_L, 3, 3),
+                                ElevatorGroup(elevator.TYPE_I, 1, 1),
+                                ElevatorGroup(elevator.TYPE_E, 2, 2)]
         time = 0
         for elevator_group in self.elevator_groups:
             # schedule arrival of all elevators at time 0

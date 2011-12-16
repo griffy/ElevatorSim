@@ -34,8 +34,9 @@ arrival_distrs = [
 ]
 
 class ElevatorGroup(object):
-    def __init__(self, type_, count):
+    def __init__(self, type_, default_count, count):
         self.type = type_
+        self.default_count = default_count
         self.count = count
         self.elevators = [Elevator(type_) for i in range(count)]
         self.pool = 0
@@ -55,5 +56,5 @@ class ElevatorGroup(object):
         elif is_evening(time):
             arrivals = rand.poisson(5, arrival_distrs[self.type]['evening'][index])
             
-        self.pool = arrivals
+        self.pool = arrivals * self.default_count
         
