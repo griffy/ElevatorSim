@@ -81,8 +81,9 @@ class ElevatorSystem(System):
             else:
             	time = group.next_gen*60
             	self.schedule_event(ElevatorArriveEvent(time, group, index))
-# TODO: add finalize method
         
+    def finalize(self):
+        pass
 # Use Case #3: If we call run with the same seed parameter each time, not
 #              only will our results be predictable (reproducable) each time
 #              we run the program, but the individual calls will have the

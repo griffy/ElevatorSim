@@ -22,6 +22,7 @@ class System(object):
                 break
             self.update()
             self.handle(event)
+        self.finalize()
         return self.stats
         
     def schedule_event(self, event):
@@ -42,4 +43,9 @@ class System(object):
     def handle(self, event):
         """ Updating of system state and stats, and scheduling of next event
             should go here """
+        pass
+
+    def finalize(self):
+        """ All final calculations go here before the stats object is
+            returned """
         pass
