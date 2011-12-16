@@ -163,10 +163,17 @@ class Elevator(object):
         elif is_evening(time):
             return floor_distrs[self.type]['evening']()
             
-    # TODO
+    def generate_floor_selections(self, time):
+        floors = [pick_floor(time) for i in range(self.num_passengers)]
+        floors.sort()
+        return floors
+
     def service_time(self, time):
-        return self.idle_time(time) + self.busy_time(time)
+        return self.idle_time(time) + self.busy_time(time) + self.travel_time(time)
+
+    def travel_time(self, time):
         
+
     def idle_time(self, time):
         if self.type == TYPE_F:
             if is_morning(time):
