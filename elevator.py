@@ -126,30 +126,6 @@ TYPE_E_FLOOR_DISTRS = {
                })
 }
 
-TYPE_F_TIME_DISTRS = {
-    'morning': {3, 5, 1, 2, 2, 1, 3, 3, 8, 1, 8, 3},
-    'afternoon': None,
-    'evening': {2, 0, 0, 0, 0, 0, 3, 1, 1, 0, 0}
-}
-
-TYPE_L_TIME_DISTRS = {
-    'morning': {3, 3, 5, 5, 10, 1, 1, 1, 8, 11, 3, 11},
-    'afternoon': {1, 10, 1, 4, 1, 6, 3, 2, 11, 11, 13, 2},
-    'evening': {1, 1, 1, 3, 0, 0, 2, 0, 1, 3, 0, 0}
-}
-
-TYPE_I_TIME_DISTRS = {
-    'morning': {8, 7, 4, 2, 2, 7, 3, 5, 5, 9, 10, 10},
-    'afternoon': {1, 2, 5, 5, 5, 3, 12, 7, 1, 0, 11, 3},
-    'evening': {0, 1, 0, 2, 1, 3, 3, 1, 1, 0, 1, 0}
-}
-
-TYPE_E_TIME_DISTRS = {
-    'morning': {3, 0, 0, 0, 2, 2, 6, 3, 3, 5, 5, 5},
-    'afternoon': {2, 2, 2, 0, 0, 2, 9, 5, 3, 6, 4, 4},
-    'evening': {1, 2, 1, 0, 1, 1, 1, 0, 0, 0, 2, 0}
-}
-
 floor_distrs = [
     TYPE_F_FLOOR_DISTRS,
     TYPE_L_FLOOR_DISTRS,
@@ -180,15 +156,11 @@ class Elevator(object):
             time must be in seconds where 0 is 5am
         """
         
-        morning_end = 6*60*60 # 11am
-        afternoon_end = morning_end + 6*60*60
-        evening_end = afternoon_end + 6*60*60
-        
-        if 0 <= time <= morning_end: #11am
+        if is_morning(time):
             return floor_distrs[self.type]['morning']()
-        elif morning_end < time <= afternoon_end:
+        elif is_afternoon(time):
             return floor_distrs[self.type]['afternoon']()
-        elif afternoon_end < time <= evening_end:
+        elif is_evening(time):
             return floor_distrs[self.type]['evening']()
             
     # TODO
@@ -197,92 +169,60 @@ class Elevator(object):
         
     def idle_time(self, time):
         if self.type == TYPE_F:
-            morning_end = 6*60*60 # 11am
-            afternoon_end = morning_end + 6*60*60
-            evening_end = afternoon_end + 6*60*60
-            
-            if 0 <= time <= morning_end: #11am
+            if is_morning(time):
                 return 29
-            elif morning_end < time <= afternoon_end:
+            elif is_afternoon(time):
                 return -1
-            elif afternoon_end < time <= evening_end:
+            elif is_evening(time):
                 return 277
         elif self.type == TYPE_L:
-            morning_end = 6*60*60 # 11am
-            afternoon_end = morning_end + 6*60*60
-            evening_end = afternoon_end + 6*60*60
-            
-            if 0 <= time <= morning_end: #11am
+            if is_morning(time): #11am
                 return 20
-            elif morning_end < time <= afternoon_end:
+            elif is_afternoon(time):
                 return 6
-            elif afternoon_end < time <= evening_end:
+            elif is_evening(time):
                 return 294
         elif self.type == TYPE_I:
-            morning_end = 6*60*60 # 11am
-            afternoon_end = morning_end + 6*60*60
-            evening_end = afternoon_end + 6*60*60
-            
-            if 0 <= time <= morning_end: #11am
+            if is_morning(time): #11am
                 return 13
-            elif morning_end < time <= afternoon_end:
+            elif is_afternoon(time):
                 return 12
-            elif afternoon_end < time <= evening_end:
+            elif is_evening(time):
                 return 219
         elif self.type == TYPE_E:
-            morning_end = 6*60*60 # 11am
-            afternoon_end = morning_end + 6*60*60
-            evening_end = afternoon_end + 6*60*60
-            
-            if 0 <= time <= morning_end: #11am
+            if is_morning(time):: #11am
                 return 51
-            elif morning_end < time <= afternoon_end:
+            elif is_afternoon(time):
                 return 1
-            elif afternoon_end < time <= evening_end:
+            elif is_evening(time):
                 return 189
                 
     def busy_time(self, time):
         if self.type == TYPE_F:
-            morning_end = 6*60*60 # 11am
-            afternoon_end = morning_end + 6*60*60
-            evening_end = afternoon_end + 6*60*60
-            
-            if 0 <= time <= morning_end: #11am
+            if is_morning(time):
                 return 98
-            elif morning_end < time <= afternoon_end:
-                return -1
-            elif afternoon_end < time <= evening_end:
+            elif is_afternoon(time):
+                return 54
+            elif is_evening(time):
                 return 256
         elif self.type == TYPE_L:
-            morning_end = 6*60*60 # 11am
-            afternoon_end = morning_end + 6*60*60
-            evening_end = afternoon_end + 6*60*60
-            
-            if 0 <= time <= morning_end: #11am
+            if is_morning(time):
                 return 86
-            elif morning_end < time <= afternoon_end:
+            elif is_afternoon(time):
                 return 71
-            elif afternoon_end < time <= evening_end:
+            elif is_evening(time):
                 return 107
         elif self.type == TYPE_I:
-            morning_end = 6*60*60 # 11am
-            afternoon_end = morning_end + 6*60*60
-            evening_end = afternoon_end + 6*60*60
-            
-            if 0 <= time <= morning_end: #11am
+            if is_morning(time):
                 return 62
-            elif morning_end < time <= afternoon_end:
+            elif is_afternoon(time):
                 return 72
-            elif afternoon_end < time <= evening_end:
+            elif is_evening(time):
                 return 110
         elif self.type == TYPE_E:
-            morning_end = 6*60*60 # 11am
-            afternoon_end = morning_end + 6*60*60
-            evening_end = afternoon_end + 6*60*60
-            
-            if 0 <= time <= morning_end: #11am
+            if is_morning(time):
                 return 135
-            elif morning_end < time <= afternoon_end:
+            elif is_afternoon(time):
                 return 156
-            elif afternoon_end < time <= evening_end:
+            elif is_evening(time):
                 return 169
