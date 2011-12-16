@@ -51,9 +51,8 @@ class ElevatorSystem(System):
                 time = cur_time + service_time
                 self.schedule_event(ElevatorArriveEvent(time, group, index))
             else:
-                # TODO
-                # schedule next arrival at beginning of next 5 min period
-                pass
+            	temp = group.next_gen
+            	self.schedule_event(ElevatorArriveEvent(temp, group, index))
 
         
         

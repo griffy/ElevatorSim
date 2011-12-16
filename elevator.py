@@ -9,13 +9,11 @@ TYPE_F_FLOOR_DISTRS = {
                           33: 1/38.0,
                           36: 14/38.0
                }),
-    'afternoon': generator({18: ,
-                          	21: ,
-                          	24: ,
-                          	27: ,
-                          	30: ,
-                          	33: ,
-                          	36: 
+    'afternoon': generator({18: 1/14.0,
+                          	21: 2/14.0,
+                          	24: 2/14.0,
+                          	27: 5/14.0,
+                          	36: 4/14.0
     			}),
     'evening': generator({24: 2/7.0,
                           27: 1/7.0,
@@ -128,7 +126,7 @@ TYPE_E_FLOOR_DISTRS = {
 
 TYPE_F_TIME_DISTRS = {
     'morning': {3, 5, 1, 2, 2, 1, 3, 3, 8, 1, 8, 3},
-    'afternoon': None,
+    'afternoon': {1, 0, 1, 0, 1, 2 ,2, 1, 1, 0, 2, 3},
     'evening': {2, 0, 0, 0, 0, 0, 3, 1, 1, 0, 0}
 }
 
@@ -204,7 +202,7 @@ class Elevator(object):
             if 0 <= time <= morning_end: #11am
                 return 29
             elif morning_end < time <= afternoon_end:
-                return -1
+                return 6
             elif afternoon_end < time <= evening_end:
                 return 277
         elif self.type == TYPE_L:
@@ -250,7 +248,7 @@ class Elevator(object):
             if 0 <= time <= morning_end: #11am
                 return 98
             elif morning_end < time <= afternoon_end:
-                return -1
+                return 54
             elif afternoon_end < time <= evening_end:
                 return 256
         elif self.type == TYPE_L:
