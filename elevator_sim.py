@@ -1,23 +1,11 @@
 from system import System
 from event import Event
 from elevator import Elevator
+from elevator_group import ElevatorGroup
 import rand
 import elevator
 
 ONE_DAY = 24*60*60 # in seconds
-
-MORNING_END = 6*60*60 # 11am
-AFTERNOON_END = MORNING_END + 6*60*60
-EVENING_END = AFTERNOON_END + 6*60*60
-        
-def is_morning(time):
-    return 0 <= time <= MORNING_END
-
-def is_afternoon(time):
-    return MORNING_END < time <= AFTERNOON_END
-    
-def is_evening(time):
-    return AFTERNOON_END < time <= EVENING_END
     
 class ElevatorArriveEvent(Event):
     def __init__(self, time, group, index):
@@ -38,12 +26,15 @@ class ElevatorSystem(System):
                 self.schedule_event(ElevatorArriveEvent(time, elevator_group, i))
         
     def update(self):
-    	temp = self.clock.time() / 300
+    	temp = self.clock.time() / 60
+    	#print temp
         for elevator_group in self.elevator_groups:
     		if elevator_group.next_gen <= temp:
         		while elevator_group.next_gen <= temp:
         			elevator_group.next_gen += 5
+        		print self.clock.time()
         		elevator_group.create_passengers(self.clock.time())
+        		print "generated passengers\n"
         
     def handle(self, event):
         if isinstance(event, ElevatorArriveEvent):
@@ -58,13 +49,15 @@ class ElevatorSystem(System):
                 else:
                     elevator.num_passengers = group.pool
                     group.pool = 0
+                    #print elevator.num_passengers
                 # schedule next arrival
                 cur_time = self.clock.time()
                 service_time = elevator.service_time(cur_time)
                 time = cur_time + service_time
                 self.schedule_event(ElevatorArriveEvent(time, group, index))
             else:
-            	temp = group.next_gen
+            	#print self.clock.time()
+            	temp = group.next_gen*60
             	self.schedule_event(ElevatorArriveEvent(temp, group, index))
 
         

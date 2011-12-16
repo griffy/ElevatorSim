@@ -1,10 +1,11 @@
 import rand
 from elevator import Elevator
+from period import is_morning, is_afternoon, is_evening
 
 TYPE_F_ARRIVAL_DISTRS = {
     'morning': [3, 5, 1, 2, 2, 1, 3, 3, 8, 1, 8, 3],
     'afternoon': [1, 0, 1, 0, 1, 1, 2, 2, 1, 1, 0, 2, 3],
-    'evening': [2, 0, 0, 0, 0, 0, 3, 1, 1, 0, 0]
+    'evening': [0, 0, 0, 0, 0, 0, 3, 1, 1, 0, 0, 2]
 }
 
 TYPE_L_ARRIVAL_DISTRS = {
@@ -41,18 +42,18 @@ class ElevatorGroup(object):
         self.next_gen = 0
         
     def create_passengers(self, time):
-        minute_period = time / 60 % 60
+        minute_period = (time / 60) % 60
         minute_period -= minute_period % 5
         
         index = minute_period / 5
         arrivals = 0
         
-        if is_morning(time)
-            arrivals = rand.poisson(arrival_distrs[self.type]['morning'][index])
+        if is_morning(time):
+            arrivals = rand.poisson(5, arrival_distrs[self.type]['morning'][index])
         elif is_afternoon(time):
-            arrivals = rand.poisson(arrival_distrs[self.type]['afternoon'][index])
+            arrivals = rand.poisson(5, arrival_distrs[self.type]['afternoon'][index])
         elif is_evening(time):
-            arrivals = rand.poisson(arrival_distrs[self.type]['evening'][index])
+            arrivals = rand.poisson(5, arrival_distrs[self.type]['evening'][index])
             
         self.pool = arrivals
         

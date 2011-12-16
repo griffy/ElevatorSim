@@ -50,12 +50,16 @@ def bernoulli(p):
 def exponential(lambda_):
     """ Returns duration of time between events given rate of arrival lambda_
     """
+    if lambda_ == 0:
+    	return 0
     rand = random.random()
     return -1 / lambda_ * math.log(1-rand)
 
 def poisson(t, lambda_):
     """ Returns number of events in time t given rate lambda_
     """
+    if lambda_ == 0:
+    	return 0
     time = 0
     num_events = 0
     while time < t:

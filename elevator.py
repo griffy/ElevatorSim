@@ -1,3 +1,5 @@
+from rand import generator
+from period import is_morning, is_afternoon, is_evening
 # We use a probability of 0.01 in place of floors that did not have any
 # passengers get off on
 
@@ -140,13 +142,13 @@ class Elevator(object):
     def __init__(self, type_):
         self.type = type_
         self.num_passengers = 0
-        if self.type = TYPE_F:
+        if self.type == TYPE_F:
         	self.capacity = 11
-        elif self.type = TYPE_L:
+        elif self.type == TYPE_L:
         	self.capacity = 10
-        elif self.type = TYPE_I:
+        elif self.type == TYPE_I:
         	self.capacity = 10
-        elif self.type = TYPE_E:
+        elif self.type == TYPE_E:
         	self.capacity = 11
         
     def pick_floor(self, time):
@@ -163,7 +165,7 @@ class Elevator(object):
             
     # TODO
     def service_time(self, time):
-        return self.idle_time(time) + self.busy_time(time) + ...
+        return self.idle_time(time) + self.busy_time(time)
         
     def idle_time(self, time):
         if self.type == TYPE_F:
@@ -188,7 +190,7 @@ class Elevator(object):
             elif is_evening(time):
                 return 219
         elif self.type == TYPE_E:
-            if is_morning(time):: #11am
+            if is_morning(time): #11am
                 return 51
             elif is_afternoon(time):
                 return 1
