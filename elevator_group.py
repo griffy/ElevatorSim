@@ -34,9 +34,11 @@ arrival_distrs = [
 ]
 
 class ElevatorGroup(object):
-    def __init__(self, type_, default_count, count):
+    def __init__(self, type_, default_count, count=None):
         self.type = type_
         self.default_count = default_count
+        if count is None:
+            count = default_count
         self.count = count
         self.elevators = [Elevator(type_) for i in range(count)]
         self.pool = 0

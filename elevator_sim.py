@@ -28,10 +28,10 @@ class ElevatorArriveEvent(Event):
 
 class ElevatorSystem(System):
     def initialize(self):
-        self.elevator_groups = [ElevatorGroup(TYPE_F, 2, 2),
-                                ElevatorGroup(TYPE_L, 3, 3),
-                                ElevatorGroup(TYPE_I, 1, 1),
-                                ElevatorGroup(TYPE_E, 2, 2)]
+        self.elevator_groups = [ElevatorGroup(TYPE_F, 2, count=2),
+                                ElevatorGroup(TYPE_L, 3, count=2),
+                                ElevatorGroup(TYPE_I, 1, count=2),
+                                ElevatorGroup(TYPE_E, 2, count=2)]
         time = 0
         for elevator_group in self.elevator_groups:
             # schedule arrival of all elevators at time 0
@@ -137,7 +137,7 @@ class ElevatorSystem(System):
 #
 # This can be used for Correlated Sampling
 system = ElevatorSystem()
-stats = system.run(1000, period.ONE_DAY, seed=0xDEADBEEF)
+stats = system.run(2000, period.ONE_DAY, seed=0xDEADBEEF)
 
 group_order = [
     GROUP_POOL_STAT % 'F',
