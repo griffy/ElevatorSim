@@ -40,6 +40,7 @@ class ElevatorGroup(object):
         self.count = count
         self.elevators = [Elevator(type_) for i in range(count)]
         self.pool = 0
+        # stores the next 5 minute period in which to generate passengers
         self.next_gen = 0
         
     def create_passengers(self, time):

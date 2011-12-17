@@ -83,10 +83,14 @@ class ElevatorSystem(System):
                 time = cur_time + service_time
                 self.schedule_event(ElevatorArriveEvent(time, group, index))
             else:
-                # next_period - cur_time = idle_time
-                # TODO: track idle time
-            	time = group.next_gen * 60
-            	self.schedule_event(ElevatorArriveEvent(time, group, index))
+            	event_time = group.next_gen * 60
+                cur_time = self.clock.time()
+                idle_time = event_time - cur_time
+                # mark down the idle time
+                self.stats.add(ELEVATOR_IDLE_STAT % 
+                                    (types[elevator.type], index),
+                               idle_time)
+            	self.schedule_event(ElevatorArriveEvent(event_time, group, index))
         
     def finalize(self):
         for elevator_group in self.elevator_groups:

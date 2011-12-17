@@ -107,12 +107,16 @@ class Stats(object):
         else:
             self.add(name, val)
         
+    def __iter__(self):
+        for attr in self._stats.keys():
+            yield attr
+
     def str(self, stat):
         res = ''
         #res += stat + ': %s\n' % str(self.get(stat))
-        res += stat + ' total: %s\n' % self.total(stat)
+        #res += stat + ' total: %s\n' % self.total(stat)
         res += stat + ' mean: %s\n' % self.mean(stat)
-        res += stat + ' median: %s\n' % self.median(stat)
+        #res += stat + ' median: %s\n' % self.median(stat)
         res += stat + ' mode: %s\n' % self.mode(stat)
         res += stat + ' stdev: %s\n' % self.stdev(stat)
         return res

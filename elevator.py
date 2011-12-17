@@ -1,7 +1,5 @@
 from rand import generator
 from period import is_morning, is_afternoon, is_evening
-# We use a probability of 0.01 in place of floors that did not have any
-# passengers get off on
 
 TYPE_F_FLOOR_DISTRS = {
     'morning': generator({18: 1/38.0,
@@ -215,7 +213,6 @@ class Elevator(object):
     def generate_floor_selections(self, time):
         floors = [self.pick_floor(time) for i in range(self.num_passengers)]
         floors.sort()
-        print "time: " + str(time), floors
         return floors
 
     def travel_time(self, time):

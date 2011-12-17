@@ -13,17 +13,26 @@ class System(object):
             random.seed(seed)
         self.initialize()
         
-    def run(self, duration, seed=None):
-        self.reset(seed)
-        while self.feq.has_events():
-            event = self.feq.next_event()
-            self.clock.update(event.time)
-            if self.clock.has_run(duration):
-                break
-            self.update()
-            self.handle(event)
-        self.finalize()
-        return self.stats
+    def update_averages(self, overall_stats):
+        for stat in self.stats:
+            overall_stats.add(stat, self.stats.get(stat))
+
+    def run(self, trials, duration, seed=None):
+        overall_stats = Stats()
+        for i in range(trials):
+            self.reset(seed)
+            while self.feq.has_events():
+                event = self.feq.next_event()
+                self.clock.update(event.time)
+                if self.clock.has_run(duration):
+                    break
+                self.update()
+                self.handle(event)
+            self.finalize()
+            self.update_averages(overall_stats)
+            print "Completed trial %d/%d" % (i+1, trials)
+        print
+        return overall_stats
         
     def schedule_event(self, event):
         """ Convenience function """
