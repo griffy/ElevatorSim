@@ -1,5 +1,8 @@
 import math
 
+# This class is essentially a more advanced dictionary where the name
+# of an attribute of a Stats object is the key and the value is a list
+# of sample points that can find their own total, mode, median, mean, etc.
 class Stats(object):
     def __init__(self):
         # stats is a dictionary

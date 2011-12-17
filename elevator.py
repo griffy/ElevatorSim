@@ -1,6 +1,8 @@
 from rand import generator
 from period import is_morning, is_afternoon, is_evening
 
+# stores a function as the value of each key, where the function will
+# generate a random value from the list according to the stated probabilities
 TYPE_F_FLOOR_DISTRS = {
     'morning': generator({18: 1/38.0,
                           21: 3/38.0,
@@ -124,6 +126,7 @@ TYPE_E_FLOOR_DISTRS = {
                })
 }
 
+# how long it takes to travel a difference of x floors
 TRAVEL_TIMES = {
 		0: 0,
 		1: 4,
@@ -186,6 +189,7 @@ class Elevator(object):
     def __init__(self, type_):
         self.type = type_
         self.num_passengers = 0
+        # types F and E had larger capacities than L and I
         if self.type == TYPE_F:
         	self.capacity = 11
         elif self.type == TYPE_L:
@@ -196,8 +200,10 @@ class Elevator(object):
         	self.capacity = 11
         
     def pick_floor(self, time):
-        """ picks a floor it is going to based on the time of day and type
-            time must be in seconds where 0 is 5am
+        """ picks a floor as a passenger would based on the time of day 
+            and type of elevator.
+            
+            time must be in seconds.
         """
         
         if is_morning(time):
@@ -216,6 +222,9 @@ class Elevator(object):
         return floors
 
     def travel_time(self, time):
+        """ returns how long it would take to reach every floor
+            selected by each passenger as they get on the elevator
+        """
         floors = self.generate_floor_selections(time)
         t_time = 0
         cur_floor = 1 
@@ -226,6 +235,11 @@ class Elevator(object):
         return t_time
 
     def idle_time(self, time):
+        """ returns the time the elevator spends not moving and not being
+            called by anyone
+            
+            the values returned are averages derived from data collection
+        """
         if self.type == TYPE_F:
             if is_morning(time):
                 return 29
@@ -234,21 +248,21 @@ class Elevator(object):
             elif is_evening(time):
                 return 277
         elif self.type == TYPE_L:
-            if is_morning(time): #11am
+            if is_morning(time):
                 return 20
             elif is_afternoon(time):
                 return 6
             elif is_evening(time):
                 return 294
         elif self.type == TYPE_I:
-            if is_morning(time): #11am
+            if is_morning(time):
                 return 13
             elif is_afternoon(time):
                 return 12
             elif is_evening(time):
                 return 219
         elif self.type == TYPE_E:
-            if is_morning(time): #11am
+            if is_morning(time):
                 return 51
             elif is_afternoon(time):
                 return 1
@@ -256,6 +270,11 @@ class Elevator(object):
                 return 189
                 
     def busy_time(self, time):
+        """ returns the time the elevator spends not moving and not being
+            called by anyone
+            
+            the values returned are averages derived from data collection
+        """
         if self.type == TYPE_F:
             if is_morning(time):
                 return 98

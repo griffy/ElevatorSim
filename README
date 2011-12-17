@@ -1,3 +1,8 @@
-The elevator simulation for CS 1538
+# Authors: Joel Griffith
+#          Matthew Becker
+#          Benyi Johnson
 
-Check out example.py to see how everything works (together)
+Elevator simulation for CS 1538
+
+The main program is found within simulation.py and can be run with:
+    python simulation.py

@@ -1,9 +1,9 @@
+import rand
+import period
 from system import System
 from event import Event
 from elevator import Elevator
 from elevator_group import ElevatorGroup
-import rand
-import period
 from elevator import types, TYPE_F, TYPE_L, TYPE_I, TYPE_E
 
 ELEVATOR_PASSENGERS_STAT = 'elevator_%s_%d_num_passengers'
@@ -28,9 +28,13 @@ class ElevatorArriveEvent(Event):
 
 class ElevatorSystem(System):
     def initialize(self):
+        # each group holds a certain type of elevator and a certain amount
+        # of elevators of that type. We specify the default amount of
+        # elevators (from the original data collection) followed by
+        # the amount we want to use of that type for the sim
         self.elevator_groups = [ElevatorGroup(TYPE_F, 2, count=2),
-                                ElevatorGroup(TYPE_L, 3, count=2),
-                                ElevatorGroup(TYPE_I, 1, count=2),
+                                ElevatorGroup(TYPE_L, 3, count=3),
+                                ElevatorGroup(TYPE_I, 1, count=1),
                                 ElevatorGroup(TYPE_E, 2, count=2)]
         time = 0
         for elevator_group in self.elevator_groups:
@@ -39,6 +43,8 @@ class ElevatorSystem(System):
                 self.schedule_event(ElevatorArriveEvent(time, elevator_group, i))
         
     def update(self):
+        # decide whether or not new passengers need to be generated for each
+        # group of elevators based on where we are in the time period
     	time_in_minutes = self.clock.time() / 60
         for elevator_group in self.elevator_groups:
     		if elevator_group.next_gen <= time_in_minutes:
@@ -56,6 +62,8 @@ class ElevatorSystem(System):
             elevator = group.elevators[index]
              
             if group.pool > 0:
+                # if there are waiting passengers to be picked up, 
+                # uniformly grab as many as we can
                 if group.pool > elevator.capacity:
                     elevator.num_passengers = rand.uniform(1, elevator.capacity)
                 else:
@@ -65,7 +73,7 @@ class ElevatorSystem(System):
                 self.stats.add(ELEVATOR_PASSENGERS_STAT % 
                                     (types[elevator.type], index),
                                elevator.num_passengers)
-                # schedule next arrival
+
                 cur_time = self.clock.time()
                 
                 idle_time = elevator.idle_time(cur_time)
@@ -82,11 +90,13 @@ class ElevatorSystem(System):
                                     (types[elevator.type], index),
                                travel_time)
 
+                # schedule next arrival
                 service_time = idle_time + busy_time + travel_time
-
                 time = cur_time + service_time
                 self.schedule_event(ElevatorArriveEvent(time, group, index))
             else:
+                # schedule the next arrival for the beginning of next 5 minute
+                # period
             	event_time = group.next_gen * 60
                 cur_time = self.clock.time()
                 idle_time = event_time - cur_time
@@ -97,6 +107,8 @@ class ElevatorSystem(System):
             	self.schedule_event(ElevatorArriveEvent(event_time, group, index))
         
     def finalize(self):
+        # at the end of a run, tally up the group totals from the elevator
+        # totals and finally everything from the group totals
         for elevator_group in self.elevator_groups:
             for i in range(len(elevator_group.elevators)):
                 elevator = elevator_group.elevators[i]
@@ -139,6 +151,8 @@ class ElevatorSystem(System):
 system = ElevatorSystem()
 stats = system.run(2000, period.ONE_DAY, seed=0xDEADBEEF)
 
+# now that we have the stats after x trials, we want to specify the order
+# in which they're printed out for easy reading
 group_order = [
     GROUP_POOL_STAT % 'F',
     GROUP_POOL_STAT % 'L',

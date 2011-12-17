@@ -17,6 +17,7 @@ class Clock(object):
         return self._time
        
     def has_run(self, duration):
+        """ checks if we've run as long as specified by the duration """
         if self.time() - self.start_time > duration:
             return True
         return False

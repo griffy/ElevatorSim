@@ -46,18 +46,28 @@ class ElevatorGroup(object):
         self.next_gen = 0
         
     def create_passengers(self, time):
+        # we want to find what minute period we're in, ie
+        # if we're in 5, 10, 15, 20, ...
         minute_period = (time / 60) % 60
         minute_period -= minute_period % 5
         
+        # then we take that minute period and find the index in the arrival
+        # distribution arrays, which will give us an arrival rate for that
+        # 5-minute period
         index = minute_period / 5
         arrivals = 0
         
+        # based on the time of day, we select the rate from the proper array
+        # and pass it to a poisson distribution for a 5-minute period
         if is_morning(time):
             arrivals = rand.poisson(5, arrival_distrs[self.type]['morning'][index])
         elif is_afternoon(time):
             arrivals = rand.poisson(5, arrival_distrs[self.type]['afternoon'][index])
         elif is_evening(time):
             arrivals = rand.poisson(5, arrival_distrs[self.type]['evening'][index])
-            
+           
+        # finally, as the arrivals are in terms of one elevator and our data
+        # was based on a default amount of elevators, we multiply it by
+        # that amount of elevators to create a pool of people for the group
         self.pool = arrivals * self.default_count
         

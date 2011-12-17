@@ -4,6 +4,7 @@ from future_events_queue import FutureEventsQueue
 from clock import Clock
 from stats import Stats
 
+# This class should be inherited from
 class System(object):
     def reset(self, seed=None):
         self.feq = FutureEventsQueue()
