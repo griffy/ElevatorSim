@@ -15,6 +15,10 @@ GROUP_PASSENGERS_STAT = 'elevator_group_%s_num_passengers'
 GROUP_IDLE_STAT = 'elevator_group_%s_idle_time'
 GROUP_BUSY_STAT = 'elevator_group_%s_busy_time'
 GROUP_TRAVEL_STAT = 'elevator_group_%s_travel_time'
+ALL_PASSENGERS_STAT = 'all_num_passengers'
+ALL_IDLE_STAT = 'all_idle_time'
+ALL_BUSY_STAT = 'all_busy_time'
+ALL_TRAVEL_STAT = 'all_travel_time'
 
 class ElevatorArriveEvent(Event):
     def __init__(self, time, group, index):
@@ -112,6 +116,18 @@ class ElevatorSystem(System):
                                                     (types[elevator.type], i))
                 self.stats.add(GROUP_TRAVEL_STAT % types[elevator.type], 
                                travel_time_list)
+            self.stats.add(ALL_PASSENGERS_STAT,
+                           self.stats.get(GROUP_PASSENGERS_STAT % 
+                                          types[elevator_group.type]))
+            self.stats.add(ALL_IDLE_STAT,
+                           self.stats.get(GROUP_IDLE_STAT % 
+                                          types[elevator_group.type]))
+            self.stats.add(ALL_BUSY_STAT,
+                           self.stats.get(GROUP_BUSY_STAT % 
+                                          types[elevator_group.type]))
+            self.stats.add(ALL_TRAVEL_STAT,
+                           self.stats.get(GROUP_TRAVEL_STAT % 
+                                          types[elevator_group.type]))
 
 
 # If we call run with the same seed parameter each time, not
@@ -162,6 +178,10 @@ for elevator_group in system.elevator_groups:
         individual_order.append(ELEVATOR_TRAVEL_STAT %
                                (types[elevator_group.type], i))
 output_order = []
+output_order.extend([ALL_PASSENGERS_STAT,
+                     ALL_IDLE_STAT,
+                     ALL_BUSY_STAT,
+                     ALL_TRAVEL_STAT])
 output_order.extend(group_order)
 output_order.extend(individual_order)
 
